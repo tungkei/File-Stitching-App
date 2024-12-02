@@ -119,16 +119,16 @@ def main():
     if "uploaded_files" not in st.session_state:
         st.session_state["uploaded_files"] = []
     
-    if "applicant_name" not in st.session_state:
-        st.session_state["applicant_name"] = ""
+    if "merged_file_name" not in st.session_state:
+        st.session_state["merged_file_name"] = ""
 
-    applicant_name = st.text_input(
-        "Applicant Name: ",
-        value=st.session_state["applicant_name"],
-        placeholder="Enter Applicant Name"
+    merged_file_name = st.text_input(
+        "Merged File Name: ",
+        value=st.session_state["merged_file_name"],
+        placeholder="Enter Merged File Name"
     )
-    if applicant_name:
-        st.session_state["applicant_name"] = applicant_name
+    if merged_file_name:
+        st.session_state["merged_file_name"] = merged_file_name
 
     # Only accept files of the following types: png, jpg, jpeg, docx, pdf
     uploaded_files = st.file_uploader("Upload files", accept_multiple_files=True, key=st.session_state["file_uploader_key"], type=['png', 'jpg', 'docx', 'pdf'],)
@@ -137,7 +137,7 @@ def main():
     if uploaded_files:
         if st.button("Clear all uploaded files"):
             st.session_state["file_uploader_key"] += 1
-            st.session_state["applicant_name"] = ""
+            st.session_state["merged_file_name"] = ""
             st.rerun()
         files_dict = {}
         
@@ -153,12 +153,12 @@ def main():
             ordered_files = [files_dict[i] for i in ordered_file_names]
 
             if st.button("Merge Files"):
-                if not applicant_name:
-                    st.error("Please provide the applicant's name.")
+                if not merged_file_name:
+                    st.error("Please provide the name of the merged file.")
                 else: 
                     merged_pdf_bytesio = process_files(ordered_files)
                     st.write("Files Stitched!")
-                    st.markdown(create_download_link(merged_pdf_bytesio, applicant_name + ".pdf"), unsafe_allow_html=True)
+                    st.markdown(create_download_link(merged_pdf_bytesio, merged_file_name + ".pdf"), unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
